@@ -1,8 +1,12 @@
+
+
+
 body {
     margin: 0;
     font-family: kanit,Arial, Helvetica, sans-serif;
     background-color:#3A405A;
     color: white;
+    min-width: 520px;
     
   }
   
@@ -10,6 +14,7 @@ body {
     overflow: hidden;
     background-color: #333;
     padding: 0 12px;
+    width: 100%;
 
   }
   
@@ -68,7 +73,7 @@ p > label {
     padding: 6px;
     border: none;
     margin-top: 8px;
-    margin-right: 16px;
+    margin-right: 20px;
     font-size: 17px;
     border-radius: 9px;
   }
@@ -110,3 +115,32 @@ input:focus:invalid {
 .list_element:hover{
     color: #943b3b;
 }
+
+@media(max-width: 850px){
+    .topnav input[type=text]{
+        width: 120px;
+    }
+}
+
+@media(max-width: 735px){
+    .topnav a{
+        padding: 14px 10px;
+        font-size: 16px;
+        
+    }
+    .topnav input[type=text]{
+        width: 80px;
+        height: 26px;
+    }
+}
+
+@media(max-width: 610px){
+    .topnav a{
+        padding: 14px 5px;
+        font-size: 15px;
+        font-weight: 200;
+    }
+}
+
+
+
