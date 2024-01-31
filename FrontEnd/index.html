@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="index.css">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav class="topnav">
+        <a href="#">Home</a>
+        <a href="#">Option 1</a>
+        <a href="#">Option 2</a>
+        <a href="#">Option 3</a>
+        <a href="#">Option 4</a>
+        <a href="#">Option 5</a>
+        <input type="text" placeholder="Search..">
+    </nav>
+
+
+    <article class="article">
+        <h1>Cupcake Title</h1>
+        <p>Sugar plum shortbread jelly chocolate lemon drops icing. Jujubes bonbon marshmallow pastry jelly-o gingerbread marzipan. Sweet bonbon muffin cookie sweet roll shortbread. Shortbread carrot cake icing sweet liquorice carrot cake.</p>
+        <p>Tart carrot cake oat cake cookie dragée toffee I love lollipop muffin. Donut bonbon chocolate cake sugar plum candy I love. Gummies muffin chupa chups jelly beans jujubes toffee I love. Pastry sesame snaps cotton candy pudding danish oat cake. Lollipop I love marshmallow pie soufflé tiramisu. Donut chocolate soufflé pudding ice cream I love marshmallow soufflé ice cream. Chocolate cake carrot cake jelly tiramisu gummi bears dragée lemon drops chocolate bar.
+
+        </p>
+
+        <div class="recipe">
+            <h2><b>Carrot Cupcake</b></h2>
+            <ul id="cupcakes">
+                <li class="list_element">1 cup white suggar</li>
+                <li class="list_element">2 eggs</li>
+                <li class="list_element">2 cups shredded carrots</li>
+                <li class="list_element">1 tsp baking soda</li>
+                <li class="list_element">1/2 cup brown sugar</li>
+                <li class="list_element">1 tsp salt</li>
+                <li class="list_element">1 cup flour</li>
+                <li class="list_element">1/2 cup vegetable oil</li>
+            </ul>
+            <label for="">Add ingredient
+                <input id="ingredient_input" class="ingredient_input" type="text">
+                <input type="button" onclick=create_element() value="Create item">
+            </label>
+        </div>
+
+        <p>Jelly muffin brownie cake cotton candy brownie gingerbread. Shortbread I love chocolate cake cookie shortbread tiramisu I love cheesecake. Cake halvah cake donut cupcake chocolate cake. Pastry cotton candy chupa chups dragée sweet cotton candy dessert cookie sesame snaps. Gummi bears liquorice I love liquorice marzipan fruitcake lemon drops sesame snaps candy canes. Cotton candy lemon drops I love soufflé jelly muffin cake.</p>
+    </article>
+
+    <!-- <form>
+        <label for="name">Name:</label>
+        <input type="text" name="name" required type="text"><br><br>
+        <label for="sex">Sex:</label>
+        <input type="radio" name="sex" id="male" value="male">
+        <label for="male">Male</label>
+        <input type="radio" name="sex" id="female" value="female">
+        <label for="female">Female</label> <br><br>
+        <label for="country">Country: </label>
+        <select name="country" id="country">
+            <option>Select an option</option>
+            <option value="nepal">Nepal</option>
+            <option value="usa">USA</option>
+            <option value="australia">Australia</option>
+        </select><br><br>
+        <label for="message">Message:</label><br>
+        <textarea name="message" id="message" cols="30" rows="4"></textarea><br><br>
+        <input type="checkbox" name="newsletter" id="newsletter">
+        <label for="newsletter">Subscribe?</label><br><br>
+        <input type="submit" value="Submit">
+    </form> -->
+
+    <form class="cupcake_form">
+        <fieldset>
+          <legend>
+            Do you like cupcakes?<span aria-label="required">*</span>
+          </legend>
+          <input type="radio" required name="cupcake" id="r1" value="yes" />
+          <label for="r1">Yes</label>
+          <input type="radio" required name="cupcake" id="r2" value="no" />
+          <label for="r2">No</label>
+        </fieldset>
+        <p><label for="n1">How old are you?</label>
+          <input
+            type="number"
+            min="12"
+            max="120"
+            step="1"
+            id="n1"
+            name="age"
+            pattern="\d+"/>
+        </p>
+        <p>
+          <label for="t1">What's your favorite cupcake?<span aria-label="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="t1"
+            name="fruit"
+            list="l1"
+            required
+            pattern="[Bb]anana|[Cc]herry|[Aa]pple|[Ss]trawberry|[Ll]emon|[Oo]range" />
+          <datalist id="l1">
+            <option>Banana</option>
+            <option>Cherry</option>
+            <option>Apple</option>
+            <option>Strawberry</option>
+            <option>Lemon</option>
+            <option>Orange</option>
+          </datalist>
+        </p>
+        <p>
+          <label for="t2">What's your email address?</label>
+          <input type="email" id="t2" name="email" />
+        </p>
+        <p>
+          <label for="t3">Leave a short message</label>
+          <textarea id="t3" name="msg" maxlength="140" rows="5"></textarea>
+        </p>
+        <p>
+          <button>Submit</button>
+        </p>
+      </form>
+
+    <footer>
+        <h3>Footer</h3>
+        <div>Algumas informações de copyright</div>
+      </footer>
+</body>
+</html>
+<script src="index.js"></script> 
