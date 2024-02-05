@@ -1,67 +1,79 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿//namespace WebApiAndControler.models
+
+// The aplication should use inheritance to define the Dollar and Euro classes.
+// The application should use generics to define the Wallet class.
+// The user should be able to add funds to the wallet.
+// The user should be able to get the balance of the wallet in a specific currency.
+// The user should be able to create a wallet and add a currency to it regardless of its nation.
+
+
+// See https://aka.ms/new-console-template for more information
 using System.Dynamic;
 using Microsoft.VisualBasic;
 
 public abstract class Currency
 {   
-    public string code;
-    protected Dictionary<string,decimal> pairExchangeRatioDict = new(); // Store the pairs ratio eg. USD to EUR, 0.92 
-    protected void AddExangeRatio(string key, decimal value)
-    {
-        pairExchangeRatioDict[key] = value;
-    }
-
-    public decimal GetExangeRatio(string key)
-    {
-        return  pairExchangeRatioDict.ContainsKey(key) ? pairExchangeRatioDict[key] : throw new Exception("Currency pair not found, value cant be null");
-    }
+    public static string? code;
 }
 
 public class Dollar : Currency {
-    public static readonly string code = "USD";
-    public Dollar()
-    {
-        AddExangeRatio("USD/EUR",0.92m); //For each new Currency the dictionary need to be updated 
-    }
+    public static new string code = "USD";
 }
 
 public class Euro : Currency{
-    public static readonly string code = "EUR";
-    public Euro()
-    {
-        AddExangeRatio("EUR/USD",1.09m); //For each new Currency the dictionary need to be updated 
-    }
+    public static new string code = "EUR";
 }
 
 public class Wallet<T> where T:Currency
 {   
-    private object walletType = typeof(T);
-    private decimal balance;
+    //private string _walletType = nameof(T);
+    public string _walletCode= typeof(T).GetField("code").GetValue(null).ToString();
 
-    public Wallet(){balance = 0m;}
-
-    public decimal Balance { get{return balance;} set{balance = Balance;} }
-    public void AddFunds(decimal funds,string currency,decimal ratio = 1m){ // Convert first to recieve in another Currency.
-        
-        if (funds>0){
-            if (currency != walletType.ToString()) // Dollar or Euro ...
-            {
-                convertFunds(funds,ratio);
-            }
-        else{ 
-            convertFunds(funds,1m);
-            }
-    }
-
+    private decimal _balance;
+    public decimal Balance { 
+        get{return _balance;} 
+        set{_balance = Balance;} 
         }
 
-    public void convertFunds(decimal funds,decimal ratio){ // also add to balance
-        funds *= ratio;
-        balance += funds;
+    public Wallet(){_balance = 0m;}
+
+    public void AddFunds(decimal funds,string currencyCode,decimal ratio = 1m){ // Convert first to recieve in another Currency.
+    
+        if (funds>0){ // Cant add negative values
+            if (currencyCode != _walletCode) // If the wallet type is different (Dollar != Euro) 
+            {
+                var convertedFunds = ConvertFunds(funds,ratio);
+                _balance += convertedFunds; // adds funds in the wallet currency type
+            }
+        else{ 
+                _balance+=funds;
+            }
+        }
     }
 
-    public decimal convertBallance(decimal ratio){
-        return balance *= ratio;
+    public decimal ConvertFunds(decimal funds,decimal ratio = 1m){
+        funds *= ratio;
+        return funds;
+        //balance += funds;
+    }
+
+    public decimal ConvertBalance(decimal ratio=1){
+        Console.WriteLine(_balance);
+         _balance *= ratio;
+         return _balance;
+    }
+
+    public Wallet<U> ConvertWallet<U>(decimal ratio) where U : Currency, new()
+    {
+        var convertedWallet = new Wallet<U>
+        {
+            _balance = ConvertBalance(ratio)
+        };
+        Console.WriteLine(convertedWallet.Balance);
+
+        _balance = 0m; // Reset the balance after conversion
+
+        return convertedWallet;
     }
 }
 
@@ -71,64 +83,39 @@ class Program
 {
     static void Main()
     {
-        Dollar dollar = new();
-        Euro euro = new();
-
-        decimal USDToEUR = dollar.GetExangeRatio("USD/EUR");
-        decimal EURToUSD = euro.GetExangeRatio("EUR/USD");
-
-        Console.WriteLine("Exange Ratios: \n(USD->EUR):" +USDToEUR+ "\n(EUR->USD):"+EURToUSD);
+        decimal USDToEUR = 0.85m;
+        decimal EURToUSD = 1.15m;
 
         // Create Dollar and EUR wallets
-        Wallet<Dollar> wallet1 = new();
-        Wallet<Euro> wallet2 = new();
+        Wallet<Dollar> walletUSD = new();
+        //Wallet<Euro> walletEUR = new();
 
         // Adding Dollar and EUR to the wallets
-        wallet1.AddFunds(100,"Dollar");
-        Console.WriteLine("Adding 100 USD in wallet 1");
-        Console.WriteLine("The balance in wallet 1 is: " + wallet1.Balance + " USD");
+        walletUSD.AddFunds(100,"USD");
+        Console.WriteLine("\nAdding 100 USD in wallet 1");
+        Console.WriteLine("The balance in wallet 1 is: " + walletUSD.Balance + " " + walletUSD._walletCode);
 
-        // Reciving EUR in the USD wallet
-        wallet1.convertFunds(200,EURToUSD);
-        Console.WriteLine("Recieving 200 EUR in wallet 1(USD)");
-        Console.WriteLine("The balance in wallet 1 is: " + wallet1.Balance + " USD");
+        walletUSD.AddFunds(100,"EUR",EURToUSD);
+        Console.WriteLine("\nAdding 100 EUR in wallet 1");
+        Console.WriteLine("The balance in wallet 1 is: " + walletUSD.Balance + " " + walletUSD._walletCode);
 
-        // Converting the balance in USD to EUR
-        wallet1.convertFunds(wallet1.Balance,USDToEUR);
-        Console.WriteLine("Converting balance EUR to USD");
-        Console.WriteLine("The balance in wallet 1 is equivalent to: " + wallet1.Balance + " EUR");
+        Wallet<Euro> walletEUR = walletUSD.ConvertWallet<Euro>(USDToEUR);
+        Console.WriteLine("\nConverted USD Wallet to EUR wallet");
+        Console.WriteLine("The Balance in wallet 2 is: " +walletEUR.Balance + " " + walletEUR._walletCode);
 
 
-        wallet2.AddFunds(80,"Euro");
-        Console.WriteLine("Adding 80 EUR in wallet 2");
-        Console.WriteLine("The Balance in wallet 2 is: " +wallet2.Balance + " EUR");
-   
-        // Reciving USD in the EUR wallet
-        wallet2.convertFunds(200,USDToEUR);
-        Console.WriteLine("Recieving 200 USD in wallet 2(EUR)");
-        Console.WriteLine("The balance in wallet 2 is: " + wallet2.Balance + " EUR");
-        
-        // Converting the balance in EUR to USD
-        wallet2.convertFunds(wallet2.Balance,EURToUSD);
-        Console.WriteLine("Converting balance EUR to USD");
-        Console.WriteLine("The balance in wallet 2 is equivalent to: " + wallet2.Balance + " USD");
 
 // Output
-// Exange Ratios: 
-// (USD->EUR):0,92
-// (EUR->USD):1,09
 // Adding 100 USD in wallet 1
 // The balance in wallet 1 is: 100 USD
-// Recieving 200 EUR in wallet 1(USD)
-// The balance in wallet 1 is: 318,00 USD
-// Converting balance EUR to USD
-// The balance in wallet 1 is equivalent to: 610,5600 EUR
-// Adding 80 EUR in wallet 2
-// The Balance in wallet 2 is: 80 EUR
-// Recieving 200 USD in wallet 2(EUR)
-// The balance in wallet 2 is: 264,00 EUR
-// Converting balance EUR to USD
-// The balance in wallet 2 is equivalent to: 551,7600 USD
+
+// Adding 100 EUR in wallet 1
+// The balance in wallet 1 is: 215,00 USD
+// 215,00
+// 182,7500
+
+// Converted USD Wallet to EUR wallet
+// The Balance in wallet 2 is: 182,7500 EUR
 
     }
 }
