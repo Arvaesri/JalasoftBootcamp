@@ -1,0 +1,76 @@
+@startuml C4 level 3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Component.puml
+
+'LAYOUT_WITH_LEGEND()
+
+title C4 Model - Component Diagram for API application
+
+Container(spa, "Single Page Application", "Typescript and React", "Provides all the internet tour functionality to customers via their web browser.")
+System_Ext(mapSys, "Map System", "Provides mapping routing and markers.")
+ContainerDb(db,"DataBase","PostgreSQL","Stores users, tours and points of interests.")
+System_Ext(iam,"IAM","Handle autentication and access control to sensitive information")
+System_Ext(mediaSys,"Media System","Stores media components in the cloud")
+
+Container_Boundary(api, "API Application") {
+
+    Boundary(tour,""){
+        Component(tourController, "Tour Controller", "Controller", "Handle incomming requests from the UI")
+        Component(tourService, "Tour Service", "Service", "Contains the business logic necessary to process the requests")
+        Component(tourRepository, "Tour userRepository", "Repository", "Handle the storage and retrieval of data from the database")
+
+        Component(poiController, "Poi Controller", "Controller", "Handle incomming requests from the UI")
+        Component(poiService, "Poi Service", "Service", "Contains the business logic necessary to process the requests")
+        Component(poiRepository, "Poi userRepository", "Repository", "Handle the storage and retrieval of data from the database")
+    }
+
+    Component(bus,"Event Bus","MassTransit","handle message exchange and comunication between modules")
+
+    Boundary(media,""){
+        Component(mediaController,"Media Controller","Handle incomming requests from the UI")
+        Component(mediaService,"Media Service","Service","Contains the business logic necessary to process the requests")
+        Component(mediaRepo,"Media Repository","Repository","Handle the storage and retrieval of data from the database")
+    }
+
+    Boundary(user,""){
+        Component(userController, "User Controller", "Controller", "Handle incomming requests from the UI")
+        Component(userService, "User Service", "Service", "Contains the business logic necessary to process the requests")
+        Component(userRepository, "User Repository", "Repository", "Handle the storage and retrieval of data from the database")
+    }
+}
+
+Rel_Neighbor(spa,mapSys,"Make Calls","JSON/HTTPS")
+Rel_D(spa,userController,"Make Calls to","JSON/HTTPS")
+Rel_D(spa,tourController,"Make Calls to","JSON/HTTPS")
+Rel_D(spa,poiController,"Make Calls to","JSON/HTTPS")
+Rel_D(spa,mediaController,"Make Calls to","JSON/HTTPS")
+
+
+Rel_D(userController,userService,"Uses")
+Rel_D(userService,userRepository,"Uses")
+Rel_D(userRepository,db,"Reads from and writes to","SQL/TCP")
+Rel_U(user,iam,"Uses")
+
+
+Rel_D(mediaController,mediaService,"Uses")
+Rel_D(mediaService,mediaRepo,"Uses")
+Rel_D(mediaRepo,mediaSys,"Uses")
+
+Rel_D(poiController,poiService,"Uses")
+Rel_Neighbor(poiService,poiRepository,"Uses")
+Rel_D(poiRepository,db,"Reads from and writes to","SQL/TCP")
+
+Rel_D(tourController,tourService,"Uses")
+Rel_Neighbor(tourService,tourRepository,"Uses")
+Rel_D(tourRepository,db,"Reads from and writes to","SQL/TCP")
+
+
+
+
+BiRel_U(bus,user,"send message to")
+BiRel_U(bus,media,"send message to")
+BiRel_U(bus,tour,"send message to")
+
+
+@enduml
