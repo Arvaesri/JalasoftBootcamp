@@ -18,10 +18,9 @@ var pokemons = [ {
     type: "electric"
 }
 ]
+window.pokemons = pokemons;
 
-ReactDOM.render(
-    <App />,
-    document.getElementById("root")
+ReactDOM.render(<App />,document.getElementById("root")
 )
 
 // const root = document.querySelector("#root")
