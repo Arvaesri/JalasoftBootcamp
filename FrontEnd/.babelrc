@@ -3,8 +3,12 @@
         "@babel/preset-env",
         "@babel/preset-react"
     ],
+    "ignore": [
+        "./src/pokemon.js"
+      ],
     "plugins": [
         "@babel/plugin-transform-runtime",
         "transform-remove-strict-mode"
     ]
+      
 }
